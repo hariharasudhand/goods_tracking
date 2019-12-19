@@ -1,0 +1,47 @@
+CREATE TABLE public.supplier_master
+(
+  supplier_id bigint NOT NULL PRIMARY KEY,
+  supplier_name character varying(40),
+  address character varying(200),
+  model character varying(20),
+  material_code character varying(20),
+  material_description character varying(100),
+  stock_volume bigint,
+  date_time date,
+  status character varying(10),
+  CONSTRAINT supplier_pkey PRIMARY KEY (supplier_id)
+)
+
+CREATE TABLE public.goods_received_master
+(
+  id bigint NOT NULL PRIMARY KEY,
+  supplier_id bigint,
+  part_no character varying(30),
+  description character varying(100),
+  gin_no character varying(20),
+  date date,
+  quantity integer,
+  status character varying(20),
+  reason character varying(200),
+  notification_no character varying(10),
+  CONSTRAINT goods_pkey PRIMARY KEY (id)
+  supplier_id should be a foriegn key with supplier_master
+)
+
+Supplier master screen not be required as of now, lets go with the Goods received details alone, will take it up later when it is raised from customer.
+Have the above 2 tables to start with.
+Goods recieved master screen may be like this....
+
+Supplier id (search from supplier master)		Part Number		Part Description
+
+
+GIN No							Date			Quantity
+
+
+							Submit Button
+
+Below the screen display the earlier goods recieved (recently received 10 records), with edit and print option in the table format.
+
+On click of print icon in the grid, bring the label screen which is given in whatsapp image.
+
+so it will be just 2 screens to meet this requirement. hope this is clear, let us talk if needed more clarity.

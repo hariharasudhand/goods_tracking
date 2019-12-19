@@ -1,0 +1,28 @@
+(
+  supplier_id bigint NOT NULL PRIMARY KEY,
+  supplier_name character varying(40),
+  address character varying(200),
+  model character varying(20),
+  material_code character varying(20),
+  material_description character varying(100),
+  stock_volume bigint,
+  date_time date,
+  status character varying(10),
+  CONSTRAINT supplier_pkey PRIMARY KEY (supplier_id)
+)
+
+CREATE TABLE goods_received_master
+(
+  id bigint NOT NULL PRIMARY KEY,
+  supplier_id bigint,
+  part_no character varying(30),
+  description character varying(100),
+  gin_no character varying(20),
+  date date,
+  quantity integer,
+  status character varying(20),
+  reason character varying(200),
+  notification_no character varying(10),
+  CONSTRAINT goods_pkey PRIMARY KEY (id)
+  supplier_id should be a foriegn key with supplier_master
+)

@@ -1,0 +1,332 @@
+<Display>:
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout
+            cols: 2
+            size_hint: 1, None
+            height: max(self.minimum_height, self.height)
+            height: '48dp'
+            padding: '5dp'
+            canvas:
+                Color:
+                    rgba: 240/255, 180/255, 80/255, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: 'Supplier & Goods Tracking'
+                size: self.texture_size
+                halign :'left'
+                font_size:'23sp'
+                color: 0,0,0,1
+                
+            Image:
+                id:logoID
+                source: 'data/tata_logo.jpg'
+                keep_ratio: False
+                allow_stretch: False
+                #opacity: 0.8
+                #size: self.texture_size
+                pos_hint:{'x': 0, 'center_y': .5}  
+                
+                
+        ScreenManager:
+            id: sm
+            Screen_Index:
+            Screen_Main:
+            Screen_Search:
+            Screen_Print:
+
+<Screen_Index>:
+    name: 'screen_index' 
+    canvas:
+        Color:
+            rgb: 0.5,0.6,0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    BoxLayout:
+        orientation:'horizontal'
+        Image:
+            source: 'data/bg-1.jpg'
+            mipmap: True
+            size_hint_x: None
+            width: 850
+            height: 550
+    
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                text: " Goods Info"
+                size_hint_x:None
+                width:500
+                height:20
+                background_normal: 'data/circle_up.png'
+                background_down: 'data/circle_down.png'
+                color: 0,0,0,1
+                on_release: root.manager.current = 'screen_search'
+            Button:
+                text: "Supplier Info"
+                size_hint_x:None
+                width:500
+                height:20
+                background_normal: 'data/circle_up.png'
+                background_down: 'data/circle_down.png'
+                color: 0,0,0,1
+                on_release: root.manager.current = 'screen_main'
+<Screen_Main>:
+    name: 'screen_main'
+    txtsupplier: txtsupplier
+    txtaddress: txtaddress
+    txtmodel: txtmodel
+    txtmatCode: txtmatCode
+    txtmatDesc: txtmatDesc
+    txtstock: txtstock
+    txtdate:txtdate
+    canvas:
+        Color:
+            rgb: 0, 1, 0, .5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Accordion:
+        orientation: 'vertical'
+        AccordionItem:
+            title: 'Add New Supplier'    
+            BoxLayout:
+                orientation: 'vertical'
+                size: root.width, root.height 
+                #pos: 150,-100
+
+                GridLayout:
+                    cols: 1
+                    spacing:0,0
+                    #size_hint: None, None
+                    #size: 150, 200
+                    Label:
+                        text: 'Add New Supplier'
+                        halign :'center'
+                        font_size:'23sp'
+                        color: 0,0,0,1
+                GridLayout:
+                    cols: 3
+                    rows:2
+                    spacing:0,0
+                    #size_hint: None, None
+                    #size: 150, 200
+                    Label:
+                        text: "Supplier Name: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        #size: 300,30
+                        width:300
+                        halign: 'left'
+                        valign: 'top'
+                    
+                    Label:
+                        text: "Address: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        width:300
+                        halign: 'left'
+                        valign: 'top'
+                    Label:
+                        text: "Model: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        width:300
+                        halign: 'left'
+                        valign: 'top'
+                        
+                    TextInput:
+                        id: txtsupplier
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80
+                
+                    TextInput:
+                        id: txtaddress
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80
+                    TextInput:
+                        id: txtmodel
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80
+                GridLayout:
+                    cols: 3
+                    rows:2
+                    spacing:0,0
+                    #size_hint: None, None
+                    #size: 150, 200
+                    Label:
+                        text: "Material Code: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        width:300
+                        halign: 'left'
+                        valign: 'top'
+                    Label:
+                        text: "Material Description: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        width:300
+                        halign: 'left'
+                        valign: 'top'
+                    Label:
+                        text: "Stock: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        width:300
+                        halign: 'left'
+                        valign: 'top'    
+                    TextInput:
+                        id: txtmatCode
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80
+                    TextInput:
+                        id: txtmatDesc
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80
+                    TextInput:
+                        id: txtstock
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80     
+                GridLayout:
+                    cols: 1
+                    rows:2
+                    spacing:0,0
+                    #size_hint: None, None
+                    #size: 150, 200
+                    Label:
+                        text: "Date: "
+                        color: 0,0,0,1 
+                        size_hint: None, None
+                        width:300
+                        halign: 'left'
+                        valign: 'top'
+                    TextInput:
+                        id: txtdate
+                        multiline:False
+                        size_hint: None, None
+                        size: 850,80
+                
+                GridLayout:
+                    cols: 2
+                    spacing:0,0
+                    #size_hint: None, None
+                    #size: 150, 200
+                    Button:
+                        text:"Submit"
+                        color: 0,0,0,1
+                        background_normal: 'data/circle_up.png'
+                        background_down: 'data/circle_down.png'
+                        width:200
+                        height:150
+                        size_hint: None, None
+                        on_press: root.btn()
+                    Button:
+                        text:"Reset"
+                        color: 0,0,0,1
+                        background_normal: 'data/circle_up.png'
+                        background_down: 'data/circle_down.png'
+                        width:200
+                        height:150
+                        size_hint: None, None
+                        on_press: root.manager.current = 'screen_index' 
+        AccordionItem:
+            title: 'Bulk Upload Supplier Data'
+            FileChooserWidget:
+                id: my_widget
+                FileChooserListView:
+                    id: filechooser
+                    on_selection: my_widget.selected(filechooser.selection)
+                Button:
+                    text:"Upload"
+                    color: 0,0,0,1
+                    background_normal: 'data/circle_up.png'
+                    background_down: 'data/circle_down.png'
+                    width:200
+                    height:150
+                    size_hint: None, None
+                    on_release: my_widget.open(filechooser.path, filechooser.selection)
+                    
+        AccordionItem:
+            title: ' Supplier List'       
+            BoxLayout:
+                id:tableID
+                orientation: 'horizontal'
+                size: root.width - 20, root.height - 20  
+                
+<Popup_Success>:
+    id:pop
+    size_hint: None, None
+    size: 30,30
+    auto_dismiss: False
+    title: 'Data Saved Successfully'
+    Button:
+        text: 'OK'
+        on_press: pop.dismiss()
+
+    
+<Screen_Search>:
+    name: 'screen_search'
+    canvas:
+        Color:
+            rgb: 0.5,0.6,0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height 
+        pos: 150,-100
+
+        GridLayout:
+            cols: 2
+            spacing:10,10
+            #size_hint: None, None
+            #size: 150, 200
+
+            Label:
+                text: "Supplier Name: "
+                color: 0,0,0,1 
+                size_hint: None, None
+                #size: 300,30
+                width:300
+                halign: 'left'
+                valign: 'top'
+
+            TextInput:
+                id: supplier
+                multiline:False
+                size_hint: None, None
+                size: 850,80
+            Button:
+                text:"Save"
+                color: 0,0,0,1
+                background_normal: 'data/circle_up.png'
+                background_down: 'data/circle_down.png'
+                width:200
+                height:150
+                size_hint: None, None
+                on_press: root.btn()
+            Button:
+                text:"Reset"
+                color: 0,0,0,1
+                background_normal: 'data/circle_up.png'
+                background_down: 'data/circle_down.png'
+                width:200
+                height:150
+                size_hint: None, None
+                on_press: root.manager.current = 'screen_index' 
+
+<Screen_Print>:
+    name: 'screen_print'      
+    Button:
+        text: 'Print'
