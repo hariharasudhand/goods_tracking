@@ -1,0 +1,259 @@
+TabbedPanel:
+	do_default_tab: False
+	MyWidget:
+	TabbedPanelItem:
+		text: 'no'
+		Button:
+			text: 'no'
+
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
+
+<MyWidget>:
+	text: 'Default'
+	GridLayout:
+		rows: 8
+		cols: 1
+		pos_hint: {'center_x':.5}
+		height: self.minimum_height
+		spacing: 20
+		padding: [20,20]
+		Label:
+			size_hint_y: None
+			height: 30
+			text: 'Welcome to the jam'
+			bold: True
+			italic: True
+			underline: True
+		GridLayout:
+			rows: 2
+			cols: 3
+			spacing: 20
+			padding: [0,25]
+			size_hint_y: None
+			height: self.minimum_height
+			Label:
+				size_hint_y: None
+				height: 30
+				text: 'Training data ->'
+			Button:
+				text: 'Load'
+				size_hint_y: None
+				height: 30
+				on_press: root.show_load()
+			Button:
+				id: testinput1
+				size_hint_y: None
+				height: 30
+				size_hint_x: None
+				width: 100
+				text: "Test train"
+				on_press: root.checkpaths("1", *args)
+			Label:
+				size_hint_y: None
+				height: 30
+				text: 'Validation data ->'
+			TextInput:
+				id: input2
+				size_hint_y: None
+				height: 30
+				multiline: False
+				hint_text: 'Enter the path here'
+			Button:
+				id: testinput2
+				size_hint_y: None
+				height: 30
+				size_hint_x: None
+				width: 100
+				text: "Test val"
+				on_press: root.checkpaths("2", *args)
+		Widget:
+	        id: separator
+	        size_hint_y: None
+	        height: 6
+	        canvas:
+	            Color:
+	                rgb: 1., 0., 0.
+	            Rectangle:
+	                pos: 20, separator.center_y
+	                size: separator.width, 2
+	    Button:
+	    	size_hint_y: None
+	    	height: 40
+	    	text: "Change parameters"
+	    	on_press: root.popupSettings(*args)
+	    ScrollView:
+	    	size_hint_y: None
+	    	height: 140
+	    	disabled: False if root.pathsOK else True
+			opacity: 1 if root.pathsOK else 0
+	    	orientation: 'vertical'
+	    	do_scroll_x: False
+	    	BoxLayout:
+	    		orientation: 'vertical'
+	    		size_hint_y: None
+	    		height: self.minimum_height
+	    		spacing: 10
+				GridLayout:
+					cols: 3
+					size_hint_y: None
+					height: self.minimum_height
+					spacing: 10
+					Label:
+						size_hint_y: None
+						height: 30
+						text: 'Parameter'
+						bold: True
+					Label:
+						size_hint_y: None
+						height: 30
+						text: 'Current value'
+						bold: True
+					Label:
+						size_hint_y: None
+						height: 30
+						text: 'Wanted value (if needed)'
+						bold: True
+				GridLayout:
+					id: parameters
+					cols: 3
+					size_hint_y: None
+					height: self.minimum_height
+					spacing: 10
+		GridLayout:
+			disabled: False if root.pathsOK else True
+			opacity: 1 if root.pathsOK else 0
+			rows: 3
+			cols: 1
+			size_hint_y: None
+			height: self.minimum_height
+			pos_hint: {'center_x':.5}
+			spacing: 20
+			BoxLayout:
+				size_hint_y: None
+				height: self.minimum_height
+				ToggleButton:
+					size_hint_y: None
+					height: 40
+					group: 'Mode'
+					text: 'Training mode'
+					on_state: root.isShown = not root.isShown
+				ToggleButton:
+					size_hint_y: None
+					height: 40
+					group: 'Mode'
+					text: 'Inference mode'
+					on_state: root.isShown2 = not root.isShown2
+			BoxLayout:
+				size_hint_y: None
+				height: self.minimum_height
+				orientation: 'vertical'
+				spacing: 20
+				disabled: False if root.isShown and root.pathsOK else True
+				opacity: 1 if root.isShown and root.pathsOK else 0
+				BoxLayout:
+					size_hint_y: None
+					height: self.minimum_height
+					spacing: 40
+					Spinner:
+						id: spinner_weights
+						size_hint_y: None
+						height: 40
+						text: "Weights?"
+						values: ["Last", "Coco", "ImageNet", "Other"]
+						on_text: root.threedeespinnah(*args)
+					Spinner:
+						id: spinner_epochs
+						size_hint_y: None
+						height: 40
+						text: "Epochs?"
+						values: ["1", "10", "50", "100", "Other"]
+						on_text: root.threedeespinnah2(*args)
+					Spinner:
+						size_hint_y: None
+						height: 40
+						text: "Layers?"
+						values: ["heads", "all"]
+				BoxLayout:
+					size_hint_y: None
+					height: self.minimum_height
+					spacing: 40
+					Label:
+						size_hint_y: None
+						height: 40
+						text: 'Epoch 1'
+					ProgressBar:
+						id: bar
+						size_hint_y: None
+						height: 40
+						max: 100
+						value: 0
+					Button:
+						text: "GO"
+						size_hint_y: None
+						height: 40
+						on_press: root.gogogo(*args)
+			GridLayout:
+				disabled: False if root.isShown2 else True
+				opacity: 1 if root.isShown2 else 0
+				rows: 1
+				size_hint_y: None
+				height: self.minimum_height
+				BoxLayout:
+					size_hint_y: None
+					height: self.minimum_height
+					spacing: 25
+					Label:
+						size_hint_y: None
+						height: 40
+						text: 'Please enter the path to the image you want to evaluate'
+					TextInput:
+						set_hint_y: None
+						height: 40
+						hint_text: 'Write here dummy'
+						multiline: False
+		Widget:
+	        id: separator
+	        size_hint_y: None
+	        height: 6
+	        canvas:
+	            Color:
+	                rgb: 1., 0., 0.
+	            Rectangle:
+	                pos: 20, separator.center_y
+	                size: separator.width, 2
+		BoxLayout:
+			size_hint_y: None
+			height: self.minimum_height
+			orientation: 'vertical'
+			Label:
+				bold: True
+				size_hint_y: None
+				height: 40
+				underline: True
+				text: 'Log'
+			ScrollView:
+				id: scroll
+				size_hint_y: None
+				height: 100
+				do_scroll_x: False
+				BoxLayout:
+					id: log
+					orientation: 'vertical'
+					size_hint_y: None
+					height: self.minimum_height

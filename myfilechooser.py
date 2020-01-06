@@ -21,10 +21,15 @@ from kivy.uix.boxlayout import BoxLayout
 # create the layout class 
 class Filechooser(BoxLayout): 
 	def select(self, *args): 
-		try: self.label.text = args[1][0] 
-		except: pass
 
-# Create the App class 
+		try:
+			self.filelabel.text = "[color=000000]" + args[1][0] + "[/color]"
+			self.filelabel.halign = "center"
+			self.filelabel.markup = True
+		except Exception as ex:
+			print("Error in data insertion: {}".format(str(ex)))
+
+# Create the App class
 class FileApp(App): 
 	def build(self): 
 		return Filechooser() 

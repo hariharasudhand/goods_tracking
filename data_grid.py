@@ -3,7 +3,7 @@ import urllib3
 import json
 import pprint
 import functools
-
+from uiutils import UIUtils
 
 from kivy.app import App
 from kivy.lang import Builder
@@ -47,56 +47,37 @@ class CLabel(ToggleButton):
 class HeaderLabel(Label):
 	bgcolor = ListProperty([0.108,0.476,0.611])
 
-
-#data_json = open('data.json')
-#data = json.load(data_json)
-
-#header = ['ID', 'Nome', 'Preco', 'IVA']
-#col_size = [0.1, 0.5, 0.2, 0.2]
-#body_alignment = ["center", "left", "right", "right"]
-#body_alignment = ["center", "center", "center", "center"]
-
-products_list = []
-
 counter = 0
+
 class DataGrid(GridLayout):
-	def add_row(self, row_data, row_align, cols_size, instance, **kwargs):
+	gird_selected_row = 0
+
+	def add_row(self, row_data, row_align, cols_size, instance,**kwargs):
 		global counter
+
 		self.rows += 1
 		#self.rows = 2
 		##########################################################
 		def change_on_press(self):
 			childs = self.parent.children
+			#print(childs)
+			print("inside DataGrid self id : %s" % self.id)
+			rowID = str(self.id)
+			rowID = str(rowID).split("row_")[1].split("_col")[0]
+			#there may be a better way to do this
+			DataGrid.gird_selected_rows = rowID
+			print("inside DataGrid selected Row: %s" % DataGrid.gird_selected_rows)
+			#row_0_col_0
 			for ch in childs:
-				if ch.id == self.id:
-					print( ch.id)
-					print (len(ch.id))
-					row_n = 0
-					if len(ch.id) == 11:
-						row_n = ch.id[4:5]
-					else:
-						row_n = ch.id[4:6]
-					for c in childs:
-						if ('row_'+str(row_n)+'_col_0') == c.id:
-							if c.state == "normal":
-								c.state="down"
-							else:	
-								c.state="normal"
-						if ('row_'+str(row_n)+'_col_1') == c.id:
-							if c.state == "normal":
-								c.state="down"
-							else:	
-								c.state="normal"
-						if ('row_'+str(row_n)+'_col_2') == c.id:
-							if c.state == "normal":
-								c.state="down"
-							else:	
-								c.state="normal"
-						if ('row_'+str(row_n)+'_col_3') == c.id:
-							if c.state == "normal":
-								c.state="down"
-							else:
-								c.state="normal"
+				chid = str(ch.id)
+				if chid.startswith("row_"+str(rowID)+"_col_"):
+						if ch.state == "normal":
+							ch.state="down"
+						else:
+							ch.state="normal"
+
+
+
 		def change_on_release(self):
 			if self.state == "normal":
 				self.state = "down"
@@ -106,10 +87,11 @@ class DataGrid(GridLayout):
 		n = 0
 		for item in row_data:
             
-            
-			cell = CLabel(text="[color=000000] item [/color]", 
-										background_normal="data/background_normal.png",
-										background_down="data/background_pressed.png",
+			cellvalue = "[color=000000]"+ str(item) +" [/color]"
+
+			cell = CLabel(text=cellvalue,
+										background_normal="static/background_normal.png",
+										background_down="static/background_pressed.png",
 										halign=row_align[n],
 										markup=True,
 										on_press=partial(change_on_press),
@@ -117,17 +99,36 @@ class DataGrid(GridLayout):
 										text_size=(0, None),
 										size_hint_x=cols_size[n], 
 										size_hint_y=None,
-										height=40,
-										id=("row_" + str(counter) + "_col_" + str(n)))
+										height=60,
+										id=("row_" + str(self.counter) + "_col_" + str(n)))
 			cell_width = Window.size[0] * cell.size_hint_x
 			cell.text_size=(cell_width - 30, None)
 			cell.texture_update()
 			self.add_widget(cell)
 			n+=1
-            
-		counter += 1
-		#self.rows += 1
-	def remove_row(self, n_cols, instance, **kwargs):
+			#print(item)
+		self.counter += 1
+
+
+	def filt_row(self,data,sText,instance, **kwargs):
+		#print("Searching for %s " % sText)
+		childs = self.parent.children
+
+		for ch in childs:
+			for ch1 in ch.children:
+				if ch1.id != "Header_Label":
+					chid = str(ch1.id)
+					matchRows = UIUtils.searchTable(data,sText)
+					#print(matchRows)
+					for rowID in matchRows:
+						#row_0_col_0
+						if not chid.startswith("row_"+str(rowID)+"_col_"):
+							#print("removing %s" % chid)
+							#print("row_"+str(rowID)+"_col_")
+							self.remove_widget(ch1)
+
+	def remove_row(self,n_cols,instance, **kwargs):
+		print("n_cols ----------------- "+str(n_cols))
 		childs = self.parent.children
 		selected = 0
 		for ch in childs:
@@ -135,7 +136,7 @@ class DataGrid(GridLayout):
 				if c.id != "Header_Label":
 					if c.state == "down":
 						self.remove_widget(c)
-						print (str(c.id) + '   -   ' + str(c.state))
+						#print (str(c.id) + '   -   ' + str(c.state))
 						selected += 1
 		if selected == 0:
 			for ch in childs:
@@ -146,9 +147,8 @@ class DataGrid(GridLayout):
 					if n_cols != len(ch.children):
 						for c in ch.children:
 							if c.id != "Header_Label":
-								print ("Length: " + str(len(ch.children)))
-								print ("N_cols: " + str(n_cols + 1))
-						
+								#print ("Length: " + str(len(ch.children)))
+								#print ("N_cols: " + str(n_cols + 1))
 								self.remove_widget(c)
 								count += 1
 								break
@@ -157,7 +157,8 @@ class DataGrid(GridLayout):
 					else:
 						break
 
-	def select_all(self, instance, **kwargs):
+	def select_all(self,instance,**kwargs):
+		#print("******* inside select all ****")
 		childs = self.parent.children
 		for ch in childs:
 			for c in ch.children:
@@ -180,10 +181,13 @@ class DataGrid(GridLayout):
 		
 	def __init__(self, header_data, body_data, b_align, cols_size, **kwargs):
 		super(DataGrid, self).__init__(**kwargs)
+		#reset table row counter
+		self.counter = 0
 		self.size_hint_y=None
 		self.bind(minimum_height=self.setter('height'))
 		self.cols = len(header_data)
 		self.rows = len(body_data) + 1
+		#self.rows = 2
 		self.spacing = [1,1]
 		n = 0
 		for hcell in header_data:
@@ -191,14 +195,10 @@ class DataGrid(GridLayout):
 			self.add_widget(HeaderLabel(text=header_str, 
 																	markup=True, 
 																	size_hint_y=None,
-																	height=40,
+																	height=60,
 																	id="Header_Label",
 																	size_hint_x=cols_size[n]))
 			n+=1
-
-
-
-
 
 
 #add_row_btn = Button(text="Add Row", on_press=pp)
@@ -241,7 +241,7 @@ def modal_insert(self):
 		for text_inputs in reversed(self.parent.children[2].children):
 			if text_inputs.id == "txtinp":
 				input_list.append(text_inputs.text)
-		print( input_list)
+		#print( input_list)
 		grid.add_row(input_list, body_alignment, col_size, self)
 		# print view
 		# view.dismiss		
